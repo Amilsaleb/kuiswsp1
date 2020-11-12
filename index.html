@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <title>Daftar Surat Surat Alquran  </title>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Surat Surat Alquran</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link active" href="#">Cari Surat</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row mt-3 justify-content-center">
+            <div class="col-md-6"
+            <h1>Cari</h1>
+            <div class="input-group">
+                <input type="text" id="text-cari" class="form-control">
+                <div class="input-group-append">
+                    <button class="btn btn-dark" type="button" id="btnCari">Cari</button>
+                </div>
+            </div>
+                
+                </div>
+            </div>
+            
+                
+        </div>
+        <hr>
+
+    </div>
+    <div id="mdl"></div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="js/script.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            
+            $('body').on('click','#btnCari',function(){
+                let katakunci = $('#text-cari').val();
+                if(katakunci.length>0) {
+                   cari(katakunci);
+                } else {
+                    alert('Kata Kunci belum diisi!!');
+                    return false;
+                }
+            });
+            $('body').on('click','#btn-close',function(){
+                $('#myModal').hide();
+            });
+        });
+
+        $.getJSON('https://al-quran-8d642.firebaseio.com/data.json?print=pretty', function (quran) {
+            $.each(quran, function (i) {
+                $('#al-quran').append(`
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">` + 
+                             quran[i].arti + '<br>' +
+                             quran[i].asma + '<br>' +
+                             quran[i].audio + '<br>' +
+                             quran[i].ayat + '<br>' +
+                             quran[i].keterangan + '<br>' +
+                             quran[i].nama + '<br>' +
+                             quran[i].nomor + '<br>' +
+                             quran[i].rukuk + '<br>' +
+                             quran[i].type + '<br>' +
+                             quran[i].urut + `</h5> 
+                            <a href="#" class="card-link" data-toggle="modal" data-target="#exampleModal">Detail</a>
+                        </div>
+                    </div>
+                </div>`);
+            });
+        });
+
+        function cari(surah){
+            $.getJSON('https://al-quran-8d642.firebaseio.com/data.json?print=pretty', function (data) {
+            $.each(data, function(i) {
+                if (data[i].nama == surah) {
+                console.log('trrgrgy', data[i]);                  
+                    let content='';
+                    content+=''+
+                        '<div class="modal" id="myModal" tabindex="-1" role="dialog">'+
+                            '<div class="modal-dialog" role="document">'+
+                                '<div class="modal-content">'+
+                                    '<div class="modal-header">'+
+                                    '<h5 class="modal-title">Hasil Pencarian "'+surah+'"</h5>'+
+                                    '</div>'+
+                                    '<div class="modal-body">'+
+                                        '<p id="modalNama">Nama Surat : '+data[i].nama+'</p>'+
+                                        '<p id="modalArti">Arti : '+data[i].arti+'</p>'+
+                                        '<p id="modalAyat">Ayat : '+data[i].ayat+'</p>'+
+                                        '<p id="modalKeterangan">Keterangan : '+data[i].keterangan+'</p>'+
+                                    '</div>'+
+                                    '<div class="modal-footer">'+
+                                        '<button type="button" class="btn btn-secondary" data-dismiss="modal" id="btn-close">Close</button>'+
+                                    '</div>'+
+                                '</div>'+
+                            '</div>'+
+                    '</div>';
+                $('#mdl').html(content);
+                $('#myModal').show();
+                }
+                });
+            });
+            
+        }
+    </script>
+</body>
+
+</html>
